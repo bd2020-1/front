@@ -8,7 +8,7 @@
 }
 
 .main {
-  padding: 5rem 0;
+  /* padding: 5rem 0; */
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -76,7 +76,7 @@
   align-items: center;
   justify-content: center;
   flex-wrap: wrap;
-  max-width: 800px;
+  width: 800px;
   margin-top: 3rem;
 }
 
@@ -120,3 +120,22 @@
     flex-direction: column;
   }
 }
+
+.box {
+  position: relative;
+  display: inline-block;
+  margin: 0 0 16px;
+  border: 1px solid #f0f0f0;
+  box-sizing: border-box;
+  border-radius: 2px;
+  padding: 0px 60px;
+  padding-top: 30px;
+  max-height: 450px;
+  width: 500px;
+  overflow-y: scroll;
+}
+
+.submit-record {
+  width: 100%;
+}
+
