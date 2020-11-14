@@ -27,7 +27,7 @@ export default function Home() {
             </Button>
           </Link>
           
-          <a href="/records/insert">
+          <a href="/records/consult/answer">
             <Button type="primary" shape="round" size="large">
               <b>CONSULTAR RESPOSTAS</b>
             </Button>
