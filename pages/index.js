@@ -13,12 +13,15 @@ export default function Home() {
   const router = useRouter()
 
   const [visible, setVisible] = useState(false);
+  const [visibleAnswer, setVisibleAnswer] = useState(false);
   const [participant, setParticipant] = useState(null);
   const [participants, setParticipants] = useState([]);
   const [module, setModule] = useState(null);
   const [modules, setModules] = useState([]);
 
   const [newParticipantLoading, setNewParticipantLoading] = useState(false);
+  const [lastModuleAnsweredLoading, setLastModuleAnsweredLoading] = useState(false);
+  const [allModulesAnsweredLoading, setAllModulesAnsweredLoading] = useState(false);
 
   const handleOk = () => {
     router.push(`/records/insert/modules/${module}/participants/${participant}`)
@@ -26,6 +29,7 @@ export default function Home() {
 
   const handleCancel = () => {
     setVisible(false)
+    setVisibleAnswer(false)
   }
 
   const showModal = async () => {
@@ -33,6 +37,7 @@ export default function Home() {
     setParticipants(pt);
     setVisible(true);
   };
+
 
   const handleParticipantChange = async (participantId) => {
     setParticipant(participantId);
@@ -49,6 +54,23 @@ export default function Home() {
     const newparticipant = await newParticipant()
     router.push(`/records/insert/modules/1/participants/${newparticipant.participantID}`)
   }
+
+  const showAnswerModal = async () => {
+    const pt = await getParticipants();
+    setParticipants(pt);
+    setVisibleAnswer(true);
+  };
+
+  const handleLastModuleAnswered = async () => {
+    setLastModuleAnsweredLoading(true)
+    router.push(`/records/consult/participants/${participant}/last-answer`)
+  }
+
+  const handleAllModulesAnswered = async () => {
+    setAllModulesAnsweredLoading(true)
+    router.push(`/records/consult/participants/${participant}/modules`)
+  }
+
 
   return (
     <BaseLayout title='Home - Vodan'>
@@ -68,11 +90,9 @@ export default function Home() {
           <b>INSERIR RESPOSTAS</b>
         </Button>
         
-        <a href="/records/consult/answer">
-          <Button type="primary" style={{ marginLeft: '5px' }} shape="round" size="large">
+          <Button type="primary" style={{ marginLeft: '5px' }} onClick={showAnswerModal} shape="round" size="large">
             <b>CONSULTAR RESPOSTAS</b>
           </Button>
-        </a>
       </div>
       <Modal
         title="Escolher Participante"
@@ -126,6 +146,46 @@ export default function Home() {
           <Button onClick={handleNewParticipant} loading={newParticipantLoading} shape="round" size="large" className={styles['submit-record']}>
             <b>Criar Novo Participante</b>
           </Button>
+        </Form>
+      </Modal>
+      <Modal
+        title="Consultar respostas"
+        visible={visibleAnswer}
+        onCancel={handleCancel}
+        footer={[
+          <Button key="cancel" onClick={handleCancel}>
+            Cancelar
+          </Button>
+        ]}
+      >
+        <Form
+        layout="vertical" 
+        >
+          <Form.Item label="Escolher participante">
+            <Select
+              size="large"
+              showSearch
+              placeholder="Participante"
+              style={{ width: '100%'}}
+              optionFilterProp="children"
+              onChange={handleParticipantChange}
+              filterOption={(input, option) =>
+                option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+              }
+            >
+              {participants.map(
+                (p) => (<Option value={p.participantID}>{p.participantID.toString()}</Option>)
+              )}
+            </Select>
+          </Form.Item>
+
+            <Button onClick={handleLastModuleAnswered} disabled={participant ? false : true} loading={lastModuleAnsweredLoading} shape="round" size="large" className={styles['submit-record']}>
+              <b>Último módulo respondido</b>
+            </Button>
+            <Button onClick={handleAllModulesAnswered}  disabled={participant ? false : true} loading={allModulesAnsweredLoading} shape="round" size="large" className={styles['submit-record']}>
+              <b>Todos os módulos respondidos</b>
+          </Button>
+
         </Form>
       </Modal>
     </BaseLayout>
