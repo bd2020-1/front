@@ -3,10 +3,11 @@ import { useRouter } from 'next/router'
 import React, { useState } from 'react';
 import styles from '../../../../../../styles/main.module.css'
 import { CheckOutlined } from '@ant-design/icons';
-import { Form, Input, Select, Button, Collapse, Badge } from 'antd';
+import { Form, Input, Select, Button, Collapse, Badge, Progress } from 'antd';
 const { Panel } = Collapse;
 const { Option } = Select;
 import { getModuleQuestions, getModuleGroups } from '../../../../../../lib/services/modules';
+import { newFormRecord } from '../../../../../../lib/services/participants';
 import BaseLayout from '../../../../../../components/BaseLayout'
 
 export const getServerSideProps = async ({ query }) => {
@@ -111,40 +112,27 @@ export default function InsertRecord({questions, groups}) {
 
   const onFinish = (values) => {
     setLoading(true);
-    setTimeout(
-      () => {
+    const payload = Object.entries(values).filter(([_id, v]) => v !== undefined).map(
+      ([id, v]) => {
+        const question = questions.find((q) => q.questionID === parseFloat(id));
+        console.log(question, id)
+        return ({
+          questionID: id,
+          answer: question.listTypeID ? null : v,
+          listOfValuesID: question.listTypeID ? v : null,
+        })
+      }
+    );
+    return newFormRecord(participant_id, module_id, payload).then(
+      (res) => {
+        setLoading(false);
+        router.push('/');
+      },
+    ).catch(
+      (err) => {
         setLoading(false);
       },
-      3000
-    )
-    console.log(questions, values)
-    console.log(
-      Object.entries(values).filter(([id, v]) => v ==! undefined).map(
-        ([id, v]) => {
-          const question = questions.find((q) => q.questionID === parseFloat(id));
-          console.log(question, id)
-          return ({
-            questionID: id,
-            answer: question.listTypeID ? null : v,
-            listOfValuesID: question.listTypeID ? v : null,
-          })
-        }
-      )
     );
-    // let payload = {}
-    // payload.answers = answers.map((a, i) = ({
-
-    // }))
-    // return resetPassword({ token, values }).then(
-    //   (res) => {
-    //     setLoading(false);
-    //     router.push('/');
-    //   },
-    // ).catch(
-    //   (err) => {
-    //     setLoading(false);
-    //   },
-    // );
   };
 
   return (
@@ -167,7 +155,18 @@ export default function InsertRecord({questions, groups}) {
           groupList(groups, questions)
         }
         <Form.Item style={{ textAlign: "center" }}>
-          <Button loading={loading} type="primary" htmlType="submit" shape="round" size="large" className={styles['submit-record']}>
+          <Progress
+            style={{
+              marginTop: '10px'
+            }}
+            strokeColor={{
+              '0%': '#108ee9',
+              '100%': '#87d068',
+            }}
+            percent={Math.round((answers.filter((a) => a).length/questions.length)*100)}
+          />
+          <p>{answers.filter((a) => a).length}/{questions.length}</p>
+          <Button loading={loading} type="primary" htmlType="submit" shape="round" size="large">
             <b>INSERIR RESPOSTAS</b>
           </Button>
         </Form.Item>
