@@ -63,12 +63,12 @@ export default function Home() {
 
   const handleLastModuleAnswered = async () => {
     setLastModuleAnsweredLoading(true)
-    router.push(`/records/consult/participants/${participant}/last-answer`)
+    router.push(`/records/consult/last_answer/participants/${participant}`)
   }
 
   const handleAllModulesAnswered = async () => {
     setAllModulesAnsweredLoading(true)
-    router.push(`/records/consult/participants/${participant}/modules`)
+    router.push(`/records/consult/all/participants/${participant}`)
   }
 
 
