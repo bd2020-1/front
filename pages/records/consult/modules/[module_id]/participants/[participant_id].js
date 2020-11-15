@@ -5,7 +5,6 @@ import styles from '../../../../../../styles/main.module.css'
 import { CheckOutlined } from '@ant-design/icons';
 import { Form, Input, Select, Button, Collapse, Badge } from 'antd';
 const { Panel } = Collapse;
-const { Option } = Select;
 import { getModuleQuestions, getModuleGroups } from '../../../../../../lib/services/modules';
 import { getAnswersByDate } from '../../../../../../lib/services/participants';
 import BaseLayout from '../../../../../../components/BaseLayout'
@@ -24,8 +23,6 @@ export default function ConsultRecord({questions, groups, answers}) {
   // const [answers, setAnswers] = useState([]);
   const [loading, setLoading] = useState(false);
   const { module_id, participant_id, dtRegisterForm, formName } = router.query
-
-  console.log(answers)
 
 
   // const setGroupTags = (groups, questions) => {
@@ -48,20 +45,49 @@ export default function ConsultRecord({questions, groups, answers}) {
   //   setGroupTags(groups, questions);
   // }
 
-  const questionFields = (questions) => questions.map((q) => {
-    let i;
-      i = (<Input disabled size="large" placeholder={q.description} />)
+  // const questionAnswers = (answers) => questions.map((q) => {
+  //   let i;
+  //     i = (<Input disabled size="large" placeholder={q.description} />)
+  //   return(
+  //     <>
+  //       <Form.Item label={q.description} name={q.questionID}>
+  //         teste(i)
+  //       </Form.Item>
+        
+  //     </>
+  //   )
+  // });
+
+  const inputAnswers = (answers) => answers.map((a) => {
+    // let i;
+    //   i = (<Input disabled size="large" placeholder={q.description} />)
+
+    return(
+      <Input disabled size="large" placeholder={a.participantAnswer} />
+    )
+  });
+
+  const questionFields = (answers, questions) => questions.map((q) => {
+    // let i;
+    //   i = (<Input disabled size="large" placeholder={q.description} />)
+    console.log(answers)
     return(
       <>
         <Form.Item label={q.description} name={q.questionID}>
-          {i}
+          {/* {
+            answers.map((a) =>
+                {
+                  inputAnswers(questions.filter((q) => q.questionID === a.questionID), answers)
+                }
+            )
+          } */}
         </Form.Item>
         
       </>
     )
   });
 
-  const groupList = (groups, questions) => (
+  const groupList = (groups, questions, answers) => (
     <Collapse 
         accordion={true}
         bordered={false}
@@ -76,7 +102,7 @@ export default function ConsultRecord({questions, groups, answers}) {
               : ""
             }
             {
-              questionFields(questions.filter((q) => q.questionGroupID === g.questionGroupID), g.questionGroupID)
+              questionFields(questions.filter((q) => q.questionGroupID === g.questionGroupID), g.questionGroupID, answers)
             }
           </Panel>
         )
@@ -111,7 +137,7 @@ export default function ConsultRecord({questions, groups, answers}) {
         onFinish={onFinish}
       >
         {
-          groupList(groups, questions)
+          groupList(groups, questions, answers)
         }
       </Form>
     </BaseLayout>
