@@ -8,15 +8,8 @@ import { allModulesAnswered } from '../../../../lib/services/participants';
 import BaseLayout from '../../../../components/BaseLayout'
 
 
-// TODO modificar para pegar módulos via API
-const modules = ['Admissão', 'Acompanhamento', 'Finalização'];
-const filterOptions = [];
-for (let i = 0; i < 3; i++) {
-  filterOptions.push(<Option key={i+1}>{modules[i]}</Option>);
-}
-
 export const getServerSideProps = async ({ query }) => {
-  // const modules = await getModules();
+  const modules = await getModules();
   const modulesAnswered = await allModulesAnswered(query.participant_id);
   return { props: { query, modules, modulesAnswered } };
 };
@@ -26,15 +19,12 @@ export default function ConsultRecords({modules, modulesAnswered}) {
   const router = useRouter();
   const { participant_id } = router.query
 
-  // modules.forEach(function (item, indice, array) {
-  //   filterOptions.push(<Option key={item["crfFormsID"]}>{item["description"]}</Option>);
-  // });
-
-
-  // for (let i = 0; i < modules.lenght ; i++) {
-  //   console.log(modules[i])
-  //   filterOptions.push(<Option key={modules[i]["crfFormsID"]}>{modules[i]["description"]}</Option>);
-  // }
+  const modulesOptions = [];
+  const filterOptions = [];
+  modules.forEach(function (item, indice, array) {
+    filterOptions.push(<Option key={item["crfFormsID"]}>{item["description"]}</Option>);
+    modulesOptions.push(item["description"]);
+  });
 
 
   return (
@@ -55,7 +45,7 @@ export default function ConsultRecords({modules, modulesAnswered}) {
           allowClear
           style={{ width: '100%' }}
           placeholder="Selecione um módulo"
-          defaultValue={modules}
+          defaultValue={modulesOptions}
         >
           {filterOptions}
         </Select>
