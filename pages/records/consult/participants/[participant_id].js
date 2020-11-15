@@ -11,17 +11,15 @@ import React, { useState } from 'react';
 
 export const getServerSideProps = async ({ query }) => {
   const modules = await getModules();
-  const allModulesAnsweredByParticipant = await allModulesAnswered(query.participant_id);
-
-  return { props: { query, modules, allModulesAnsweredByParticipant } };
+  return { props: { query, modules } };
 };
 
 
-export default function ConsultRecords({modules, allModulesAnsweredByParticipant}) {
+export default function ConsultRecords({modules}) {
   const router = useRouter();
   const { participant_id } = router.query
 
-  const [modulesAnswered, setModulesAnswered] = useState(allModulesAnsweredByParticipant);
+  const [modulesAnswered, setModulesAnswered] = useState([]);
 
   const handleModuleFilter = async (moduleSelected) => {
     const modulesAnsweredByFilter = await allModulesAnswered(participant_id, moduleSelected);
@@ -32,7 +30,7 @@ export default function ConsultRecords({modules, allModulesAnsweredByParticipant
   const modulesOptions = [];
   const filterOptions = [];
   modules.forEach(function (item, indice, array) {
-    filterOptions.push(<Option key={item["crfFormsID"]}>{item["description"]}</Option>);
+    filterOptions.push(<Option value={item["crfFormsID"]}>{item["description"]}</Option>);
     modulesOptions.push(item["description"]);
   });
 
@@ -52,6 +50,16 @@ export default function ConsultRecords({modules, allModulesAnsweredByParticipant
       <Select
           mode="multiple"
           allowClear
+          style={{ width: '100%' }}
+          placeholder="Selecione um módulo"
+          onChange={handleModuleFilter}
+        >
+          {filterOptions}
+        </Select>
+        <br />
+        <Select
+          mode="multiple"
+          disabled
           style={{ width: '100%' }}
           placeholder="Selecione um módulo"
           defaultValue={modulesOptions}
