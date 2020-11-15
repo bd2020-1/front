@@ -2,8 +2,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react';
 import styles from '../../../../../../styles/main.module.css'
-import { CheckOutlined } from '@ant-design/icons';
-import { Form, Input, Select, Button, Collapse, Badge } from 'antd';
+import { Form, Input, Collapse } from 'antd';
 const { Panel } = Collapse;
 import { getModuleQuestions, getModuleGroups } from '../../../../../../lib/services/modules';
 import { getAnswersByDate } from '../../../../../../lib/services/participants';
@@ -19,75 +18,31 @@ export const getServerSideProps = async ({ query }) => {
 
 export default function ConsultRecord({questions, groups, answers}) {
   const router = useRouter();
-  const [groupEmptyInputs, setGroupEmptyInputs] = useState([]);
-  // const [answers, setAnswers] = useState([]);
   const [loading, setLoading] = useState(false);
   const { module_id, participant_id, dtRegisterForm, formName } = router.query
 
-
-  // const setGroupTags = (groups, questions) => {
-  //   let aux = [...groupEmptyInputs]
-  //   groups.forEach((g) => {
-  //     aux[g.questionGroupID] = 0;
-  //     questions.filter((q) => q.questionGroupID === g.questionGroupID).forEach(
-  //       (q) => {
-  //         if(!answers[q.questionID])
-  //           aux[g.questionGroupID] += 1;
-  //       }
-  //     )
-  //   });
-  //   setGroupEmptyInputs(aux);
-  // }
-
-  // const onInputChange = (id, value) => {
-  //   answers[id] = value;
-  //   setAnswers([...answers]);
-  //   setGroupTags(groups, questions);
-  // }
-
-  // const questionAnswers = (answers) => questions.map((q) => {
-  //   let i;
-  //     i = (<Input disabled size="large" placeholder={q.description} />)
-  //   return(
-  //     <>
-  //       <Form.Item label={q.description} name={q.questionID}>
-  //         teste(i)
-  //       </Form.Item>
-        
-  //     </>
-  //   )
-  // });
-
-  const inputAnswers = (answers) => answers.map((a) => {
-    // let i;
-    //   i = (<Input disabled size="large" placeholder={q.description} />)
-
-    return(
-      <Input disabled size="large" placeholder={a.participantAnswer} />
-    )
-  });
-
-  const questionFields = (answers, questions) => questions.map((q) => {
-    // let i;
-    //   i = (<Input disabled size="large" placeholder={q.description} />)
-    console.log(answers)
+  const questionFields = (questions) => questions.map((q) => {
     return(
       <>
         <Form.Item label={q.description} name={q.questionID}>
-          {/* {
-            answers.map((a) =>
-                {
-                  inputAnswers(questions.filter((q) => q.questionID === a.questionID), answers)
-                }
-            )
-          } */}
+         {
+           answers.map((a) => {
+            if (a.questionID === q.questionID) {
+              return(
+                <Input disabled size="large" placeholder={a.participantAnswer ? a.participantAnswer : a.listParticipantAnswer} />
+              )
+            }
+
+            }
+          )
+         }
         </Form.Item>
         
       </>
     )
   });
 
-  const groupList = (groups, questions, answers) => (
+  const groupList = (groups, questions) => (
     <Collapse 
         accordion={true}
         bordered={false}
@@ -102,7 +57,7 @@ export default function ConsultRecord({questions, groups, answers}) {
               : ""
             }
             {
-              questionFields(questions.filter((q) => q.questionGroupID === g.questionGroupID), g.questionGroupID, answers)
+              questionFields(questions.filter((q) => q.questionGroupID === g.questionGroupID), g.questionGroupID)
             }
           </Panel>
         )
