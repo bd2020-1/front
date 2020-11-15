@@ -21,8 +21,6 @@ export default function ConsultRecord({questions, groups, answers}) {
   const [loading, setLoading] = useState(false);
   const { participant_id } = router.query
 
-  console.log(answers)
-
   const questionFields = (questions) => questions.map((q) => {
     return(
       <>

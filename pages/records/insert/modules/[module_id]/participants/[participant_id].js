@@ -80,6 +80,11 @@ export default function InsertRecord({questions, groups}) {
         accordion={true}
         bordered={false}
       >
+      <Panel header="No group" key="0">
+        {
+          questionFields(questions.filter((q) => q.questionGroupID === null))
+        }
+      </Panel>
       {
         groups.map((g) =>
             <Panel header={g.description} key={g.questionGroupID} extra={genExtra(g.questionGroupID)}>
