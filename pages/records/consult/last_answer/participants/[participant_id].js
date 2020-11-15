@@ -19,7 +19,9 @@ export const getServerSideProps = async ({ query }) => {
 export default function ConsultRecord({questions, groups, answers}) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-  const { participant_id, formName } = router.query
+  const { participant_id } = router.query
+
+  console.log(answers)
 
   const questionFields = (questions) => questions.map((q) => {
     return(
@@ -89,7 +91,7 @@ export default function ConsultRecord({questions, groups, answers}) {
       </Link>
 
       <p className={styles.description}>
-        Consultar módulo <b>{formName}</b> do participante <b>{participant_id}</b>
+      Módulo <b>{answers[0].formName}</b> ::  Consulta do último módulo respondido pelo participante <b>{participant_id}</b>. 
       </p>
       <Form
         layout="vertical" 
