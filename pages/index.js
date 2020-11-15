@@ -182,13 +182,14 @@ export default function Home() {
             </Select>
           </Form.Item>
 
-            <Button onClick={handleLastModuleAnswered} disabled={participant ? false : true} loading={lastModuleAnsweredLoading} shape="round" size="large" className={styles['submit-record']}>
+          <Form.Item style={{ textAlign: "center" }}>
+          <Button onClick={handleLastModuleAnswered} disabled={participant ? false : true} loading={lastModuleAnsweredLoading} shape="round" size="large" className={styles['submit-record']}>
               <b>Último módulo respondido</b>
             </Button>
-            <Button onClick={handleAllModulesAnswered}  disabled={participant ? false : true} loading={allModulesAnsweredLoading} shape="round" size="large" className={styles['submit-record']}>
+            <Button onClick={handleAllModulesAnswered} disabled={participant ? false : true} loading={allModulesAnsweredLoading} shape="round" size="large" className={styles['submit-record']}>
               <b>Todos os módulos respondidos</b>
           </Button>
-
+          </Form.Item>
         </Form>
       </Modal>
     </BaseLayout>
