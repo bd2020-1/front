@@ -1,10 +1,7 @@
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import React, { useState } from 'react';
 import styles from '../../../../styles/main.module.css'
-import { CheckOutlined } from '@ant-design/icons';
-import { Form, Input, Select, Button, Collapse, Badge } from 'antd';
-const { Panel } = Collapse;
+import { Select } from 'antd';
 const { Option } = Select;
 import { getModules } from '../../../../lib/services/modules';
 import { allModulesAnswered } from '../../../../lib/services/participants';
@@ -17,8 +14,6 @@ const filterOptions = [];
 for (let i = 0; i < 3; i++) {
   filterOptions.push(<Option key={i+1}>{modules[i]}</Option>);
 }
-
-// const modulesAnswered= [{"formRecordID": 111, "module": "Admissão", "date": "10/02/2020"}, {"formRecordID": 222, "module": "Acompanhamento", "date": "15/02/2020"}]
 
 export const getServerSideProps = async ({ query }) => {
   // const modules = await getModules();
@@ -65,15 +60,6 @@ export default function ConsultRecords({modules, modulesAnswered}) {
           {filterOptions}
         </Select>
         </div>
-
-        {/* {modulesAnswered.map((resp) => (
-          <Link href={`../../form/${resp["formRecordID"]}`}>
-            <div className={styles.card} key={resp["formRecordID"]}>
-                <p><b>{resp["formRecordID"]}</b></p>
-                <p>Data de preenchimento: {resp["dtRegisterForm"]}</p>
-              </div>
-          </Link>
-        ))} */}
 
         {modulesAnswered.map((resp) => (
           <Link href={`../modules/${resp["crfFormsID"]}/participants/${participant_id}?dtRegisterForm=${resp["dtRegisterForm"]}&formName=${resp["FormsName"]}`}>

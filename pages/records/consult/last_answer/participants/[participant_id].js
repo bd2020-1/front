@@ -10,9 +10,8 @@ import BaseLayout from '../../../../../components/BaseLayout'
 
 export const getServerSideProps = async ({ query }) => {
   const answers = await getLastModuleAnswers(query.participant_id)
-  console.log(answers[0].module_id)
-  const questions = await getModuleQuestions(answers[0].module_id);
-  const groups = await getModuleGroups(answers[0].module_id);
+  const questions = await getModuleQuestions(answers[0].crfFormsID);
+  const groups = await getModuleGroups(answers[0].crfFormsID);
   return { props: { query, questions, groups, answers } };
 };
 
@@ -47,7 +46,12 @@ export default function ConsultRecord({questions, groups, answers}) {
     <Collapse 
         accordion={true}
         bordered={false}
-      >
+    >
+      <Panel header="No group" key="0">
+        {
+          questionFields(questions.filter((q) => q.questionGroupID === null))
+        }
+      </Panel>
       {
         groups.map((g) =>
             <Panel header={g.description} key={g.questionGroupID}>
