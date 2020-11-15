@@ -68,7 +68,7 @@ export default function Home() {
 
   const handleAllModulesAnswered = async () => {
     setAllModulesAnsweredLoading(true)
-    router.push(`/records/consult/all/participants/${participant}`)
+    router.push(`/records/consult/participants/${participant}`)
   }
 
 

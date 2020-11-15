@@ -1,14 +1,14 @@
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react';
-import styles from '../../../../../styles/main.module.css'
+import styles from '../../../../styles/main.module.css'
 import { CheckOutlined } from '@ant-design/icons';
 import { Form, Input, Select, Button, Collapse, Badge } from 'antd';
 const { Panel } = Collapse;
 const { Option } = Select;
-import { getModules } from '../../../../../lib/services/modules';
-import { allModulesAnswered } from '../../../../../lib/services/participants';
-import BaseLayout from '../../../../../components/BaseLayout'
+import { getModules } from '../../../../lib/services/modules';
+import { allModulesAnswered } from '../../../../lib/services/participants';
+import BaseLayout from '../../../../components/BaseLayout'
 
 
 // TODO modificar para pegar módulos via API
@@ -21,39 +21,15 @@ for (let i = 0; i < 3; i++) {
 // const modulesAnswered= [{"formRecordID": 111, "module": "Admissão", "date": "10/02/2020"}, {"formRecordID": 222, "module": "Acompanhamento", "date": "15/02/2020"}]
 
 export const getServerSideProps = async ({ query }) => {
-  const modules = await getModules();
-  // console.log(modules)
+  // const modules = await getModules();
   const modulesAnswered = await allModulesAnswered(query.participant_id);
-  return { props: { query, modulesAnswered } };
+  return { props: { query, modules, modulesAnswered } };
 };
 
 
-  // for (let i = 0; i < modules.lenght ; i++) {
-  //   console.log(modules)
-  //   filterOptions.push(<Option key={modules["crfFormsID"]}>{modules["description"]}</Option>);
-  // }
-
-
-
-export default function ConsultRecords({modulesAnswered}) {
+export default function ConsultRecords({modules, modulesAnswered}) {
   const router = useRouter();
   const { participant_id } = router.query
-
-  console.log(modulesAnswered)
-  console.log(modules)
-
-  // console.log(modules)
-  // const filterOptions = [];
-
-
-  // const modulesFields = (modules) => modules.map((q) => {
-  //   console.log(modules)
-  // });
-
-
-  // modules.map((module) => (
-  //   console.log(module)
-  // ))
 
   // modules.forEach(function (item, indice, array) {
   //   filterOptions.push(<Option key={item["crfFormsID"]}>{item["description"]}</Option>);
@@ -64,11 +40,6 @@ export default function ConsultRecords({modulesAnswered}) {
   //   console.log(modules[i])
   //   filterOptions.push(<Option key={modules[i]["crfFormsID"]}>{modules[i]["description"]}</Option>);
   // }
-
-  // modules.forEach((module) => {
-  //   filterOptions.push(<Option key={module["crfFormsID"]}>{module["description"]}</Option>);
-  // });
-
 
 
   return (
@@ -95,10 +66,19 @@ export default function ConsultRecords({modulesAnswered}) {
         </Select>
         </div>
 
-        {modulesAnswered.map((resp) => (
-          <Link href={`records/consult/[formRecordID]?formRecordID=${resp["formRecordID"]}`} as={`${resp["formRecordID"]}`}>
+        {/* {modulesAnswered.map((resp) => (
+          <Link href={`../../form/${resp["formRecordID"]}`}>
             <div className={styles.card} key={resp["formRecordID"]}>
                 <p><b>{resp["formRecordID"]}</b></p>
+                <p>Data de preenchimento: {resp["dtRegisterForm"]}</p>
+              </div>
+          </Link>
+        ))} */}
+
+        {modulesAnswered.map((resp) => (
+          <Link href={`../modules/${resp["crfFormsID"]}/participants/${participant_id}?dtRegisterForm=${resp["dtRegisterForm"]}&formName=${resp["FormsName"]}`}>
+            <div className={styles.card} key={resp["formRecordID"]}>
+                <p><b>{resp["FormsName"]}</b></p>
                 <p>Data de preenchimento: {resp["dtRegisterForm"]}</p>
               </div>
           </Link>
