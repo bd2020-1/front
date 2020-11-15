@@ -45,7 +45,7 @@ export default function ConsultRecords({modules, allModulesAnsweredByParticipant
       </Link>
 
       <p className={styles.description}>
-        Consultar Respostas
+        Consultar respostas do participante <b>{participant_id}</b>
       </p>
 
       <div className={styles.grid}>
