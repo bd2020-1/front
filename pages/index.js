@@ -99,6 +99,7 @@ export default function Home() {
         visible={visible}
         onOk={handleOk}
         okText="Inserir Respostas"
+        okButtonProps={{disabled: (!module)}}
         cancelText="Cancelar"
         onCancel={handleCancel}
       >
@@ -143,9 +144,11 @@ export default function Home() {
             </Form.Item>
             : ''
           }
+          <Form.Item style={{ textAlign: "center" }}>
           <Button onClick={handleNewParticipant} loading={newParticipantLoading} shape="round" size="large" className={styles['submit-record']}>
             <b>Criar Novo Participante</b>
           </Button>
+          </Form.Item>
         </Form>
       </Modal>
       <Modal
